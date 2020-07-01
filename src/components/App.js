@@ -1,14 +1,12 @@
 import React from 'react';
 import '../styles/App.css';
-import VisualComponent from './VisualComponent'
+import PianoComponent from './PianoComponent'
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <p>
-          HomePage
-        </p>
+        <PianoComponent></PianoComponent>
       </header>
     </div>
   );
