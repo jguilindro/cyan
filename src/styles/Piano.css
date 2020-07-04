@@ -2,8 +2,8 @@
     position: absolute;
     bottom: 0;
     left: 200;
-  }
+}
   
-  #svg rect {
+#svg rect {
     transition: all 0.2s linear;
-  }
+}
