@@ -1,9 +1,48 @@
 #svg {
     position: absolute;
     bottom: 0;
-    left: 200;
 }
   
 #svg rect {
     transition: all 0.2s linear;
+
 }
+
+.keys {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.controls {
+    display: flex;
+    position: absolute;
+    width: 60vw;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 150px;
+    height: 70px;
+    z-index: 2;
+  }
+  
+  .controls button {
+    border: none;
+    box-shadow: none;
+    border-radius: 8px;
+    margin-right: 10px;
+    padding: 0;
+    flex-grow: 1;
+    height: 100%;
+    width: 100%;
+    transition: transform 0.2s linear;
+    font-family: inherit;
+    font-size: 20px;
+    font-weight: bold;
+    -webkit-user-select: none; 
+    -moz-user-select: none;
+    -ms-user-select: none; 
+    user-select: none;
+    line-height: 1;
+  }

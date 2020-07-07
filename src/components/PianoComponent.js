@@ -1,6 +1,7 @@
 import React from 'react';
 import '../styles/Piano.css';
 import Keys from './Keys';
+import ControlsComponent from './ControlsComponent';
 const model = require('@magenta/music/node/piano_genie');
 const core = require('@magenta/music/node/core');
 
@@ -39,7 +40,8 @@ class PianoComponent extends React.Component {
             height: 20,
             keyWhitelist: null,
             TEMPERATURE: this.getTemperature(),
-            keyColor: Array(90).fill(null)
+            keyColor: Array(90).fill(null),
+            buttonsPressed: Array(8).fill(false)
         }
 
     }
@@ -143,14 +145,25 @@ class PianoComponent extends React.Component {
         });
     }
 
-    buttonDown(button, fromKeyDown) {
+    buttonDown(button) {
         // If button is already pressed down, do nothing.
+        
         if (heldButtonToVisualData.has(button)) {
             return;
         }
-
-        //TODO: button logic
-
+        
+        this.setState(state => {
+            const buttonsPressed = state.buttonsPressed.map((item, j) => {
+                if (j === button) {
+                    return true;
+                } else {
+                    return item;
+                }
+                
+            });
+            return { buttonsPressed, }
+        });
+    
         const note = genie.nextFromKeyWhitelist(BUTTON_MAPPING[button], this.state.keyWhitelist, this.state.TEMPERATURE);
         const pitch = CONSTANTS.LOWEST_PIANO_KEY_MIDI_NOTE + note;
 
@@ -189,6 +202,16 @@ class PianoComponent extends React.Component {
 
     buttonUp(button) {
         //TODO: button logic
+        this.setState(state => {
+            const buttonsPressed = state.buttonsPressed.map((item, j) => {
+                if (j === button) {
+                    return false;
+                } else {
+                    return item;
+                }
+            });
+            return { buttonsPressed, }
+        });
 
         const thing = heldButtonToVisualData.get(button);
         if (thing) {
@@ -283,11 +306,18 @@ class PianoComponent extends React.Component {
         }
 
         return (
-            <svg id="svg" width={this.state.width} height={this.state.height}>
-                {
-                    keys
-                }
-            </svg>
+            <div className="piano">
+                <div className="keys">
+                <svg id="svg" width={this.state.width} height={this.state.height}>
+                    {
+                        keys
+                    }
+                </svg>
+                </div>
+                <div id="controls" className="controls">
+                    <ControlsComponent pressed={this.state.buttonsPressed}></ControlsComponent>
+                </div>
+            </div>
         );
     }
 }

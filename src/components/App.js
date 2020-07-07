@@ -5,9 +5,7 @@ import PianoComponent from './PianoComponent'
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <PianoComponent></PianoComponent>
-      </header>
+      <PianoComponent></PianoComponent>
     </div>
   );
 }
