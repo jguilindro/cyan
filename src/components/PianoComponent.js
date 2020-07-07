@@ -147,23 +147,17 @@ class PianoComponent extends React.Component {
 
     buttonDown(button) {
         // If button is already pressed down, do nothing.
-        
         if (heldButtonToVisualData.has(button)) {
             return;
         }
-        
-        this.setState(state => {
-            const buttonsPressed = state.buttonsPressed.map((item, j) => {
-                if (j === button) {
-                    return true;
-                } else {
-                    return item;
-                }
-                
-            });
-            return { buttonsPressed, }
+
+        //Press the control button
+        const newButtonsPressed = this.state.buttonsPressed.slice();
+        newButtonsPressed[button] = true;
+        this.setState({
+            buttonsPressed: newButtonsPressed
         });
-    
+
         const note = genie.nextFromKeyWhitelist(BUTTON_MAPPING[button], this.state.keyWhitelist, this.state.TEMPERATURE);
         const pitch = CONSTANTS.LOWEST_PIANO_KEY_MIDI_NOTE + note;
 
@@ -188,44 +182,29 @@ class PianoComponent extends React.Component {
 
     highlightNote(note, button) {
         // Show the note on the piano.
-        this.setState(state => {
-            const keyColor = state.keyColor.map((item, j) => {
-                if (j === note) {
-                    return CONSTANTS.COLORS[button];
-                } else {
-                    return item;
-                }
-            });
-            return { keyColor, }
+        const newKeyColors = this.state.keyColor.slice();
+        newKeyColors[note] = CONSTANTS.COLORS[button];
+        this.setState({
+            keyColor: newKeyColors
         });
     }
 
     buttonUp(button) {
-        //TODO: button logic
-        this.setState(state => {
-            const buttonsPressed = state.buttonsPressed.map((item, j) => {
-                if (j === button) {
-                    return false;
-                } else {
-                    return item;
-                }
-            });
-            return { buttonsPressed, }
+        //Let go of the control button
+        const newButtonsPressed = this.state.buttonsPressed.slice();
+        newButtonsPressed[button] = false;
+        this.setState({
+            buttonsPressed: newButtonsPressed
         });
 
         const thing = heldButtonToVisualData.get(button);
         if (thing) {
             // Stop hearing the note.
             const pitch = CONSTANTS.LOWEST_PIANO_KEY_MIDI_NOTE + thing.note;
-            this.setState(state => {
-                const keyColor = state.keyColor.map((item, j) => {
-                    if (j === thing.note) {
-                        return null;
-                    } else {
-                        return item;
-                    }
-                });
-                return { keyColor, }
+            const newKeyColors = this.state.keyColor.slice();
+            newKeyColors[thing.note] = null;
+            this.setState({
+                keyColor: newKeyColors
             });
             this.playNoteUp(pitch);
 
@@ -308,11 +287,11 @@ class PianoComponent extends React.Component {
         return (
             <div className="piano">
                 <div className="keys">
-                <svg id="svg" width={this.state.width} height={this.state.height}>
-                    {
-                        keys
-                    }
-                </svg>
+                    <svg id="svg" width={this.state.width} height={this.state.height}>
+                        {
+                            keys
+                        }
+                    </svg>
                 </div>
                 <div id="controls" className="controls">
                     <ControlsComponent pressed={this.state.buttonsPressed}></ControlsComponent>
