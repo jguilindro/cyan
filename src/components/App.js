@@ -4,7 +4,7 @@ import PianoComponent from './PianoComponent'
 
 function App() {
   return (
-    <div className="App">
+    <div id="App" className="App">
       <PianoComponent></PianoComponent>
     </div>
   );

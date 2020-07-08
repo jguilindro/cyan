@@ -30,8 +30,11 @@ class PianoComponent extends React.Component {
         super(props);
         this.player = new core.SoundFontPlayer('https://storage.googleapis.com/magentadata/js/soundfonts/sgm_plus');
 
+        this.buttonDown = this.buttonDown.bind(this);
+        this.buttonUp = this.buttonUp.bind(this);
+
         this.state = {
-            OCTAVES: 7,
+            OCTAVES: window.innerWidth > 700 ? 7 : 3,
             whiteNoteWidth: 20,
             blackNoteWidth: 20,
             whiteNoteHeight: 90,
@@ -48,7 +51,7 @@ class PianoComponent extends React.Component {
 
     loadAllSamples() {
         const seq = { notes: [] };
-        for (let i = 0; i < CONSTANTS.NOTES_PER_OCTAVE * this.state.OCTAVES; i++) {
+        for (let i = 0; i < CONSTANTS.NOTES_PER_OCTAVE * 7; i++) {
             seq.notes.push({ pitch: CONSTANTS.LOWEST_PIANO_KEY_MIDI_NOTE + i });
         }
         this.player.loadSamples(seq);
@@ -88,8 +91,8 @@ class PianoComponent extends React.Component {
         } else {
             this.setState({ whiteNoteWidth: Math.floor(ratio) });
         }
-        this.setState({ blackNoteWidth: this.state.whiteNoteWidth * 2 / 3 });
         this.setState({
+            blackNoteWidth: this.state.whiteNoteWidth * 2 / 3,
             width: window.innerWidth,
             height: this.state.whiteNoteHeight
         });
@@ -216,15 +219,14 @@ class PianoComponent extends React.Component {
         this.initGenie();
         this.loadAllSamples();
         this.whenResized();
-        window.addEventListener("resize", this.whenResized.bind(this));
+        window.addEventListener('resize', this.whenResized.bind(this));
         document.addEventListener('keydown', this.onKeyDown.bind(this));
         document.addEventListener('keyup', this.onKeyUp.bind(this));
-        //const note = genie.nextFromKeyWhitelist(0, this.state.keyWhitelist, this.state.TEMPERATURE);
         genie.resetState();
     }
 
     componentWillUnmount() {
-        window.removeEventListener("resize", this.whenResized.bind(this));
+        window.removeEventListener('resize', this.whenResized.bind(this));
         document.removeEventListener('keydown', this.onKeyDown.bind(this));
         document.removeEventListener('keyup', this.onKeyUp.bind(this));
     }
@@ -294,7 +296,7 @@ class PianoComponent extends React.Component {
                     </svg>
                 </div>
                 <div id="controls" className="controls">
-                    <ControlsComponent pressed={this.state.buttonsPressed}></ControlsComponent>
+                    <ControlsComponent pressed={this.state.buttonsPressed} buttonDown={this.buttonDown} buttonUp={this.buttonUp}></ControlsComponent>
                 </div>
             </div>
         );
